@@ -10,11 +10,11 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-# map_file = "maps/test_line.txt"
+map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-map_file = "maps/main_maze.txt"
+# map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph=literal_eval(open(map_file, "r").read())
@@ -29,6 +29,32 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
+graph = {}
+
+visited = []
+
+while len(visited) < len(world.rooms):
+    
+    c_room = player.current_room
+    exits = c_room.get_exits()
+    visited.append(c_room)
+    
+    if c_room.id not in graph:
+        graph[c_room.id] = {}
+
+        for e in exits:
+            room = c_room.get_room_in_direction(e)
+            
+            graph[c_room.id][e] = room.id
+
+            if room not in visited:
+                player.travel(e)
+                traversal_path.append(e)
+            else:
+                pass
+
+print("graph", graph)
+print("path", traversal_path)
 
 
 # TRAVERSAL TEST
@@ -51,12 +77,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
