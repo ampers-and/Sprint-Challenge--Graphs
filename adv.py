@@ -33,8 +33,12 @@ graph = {}
 
 visited = []
 
-while len(visited) < len(world.rooms):
-    
+def traverse():
+    global player
+    global traversal_path
+    global graph
+    global visited
+
     c_room = player.current_room
     exits = c_room.get_exits()
     visited.append(c_room)
@@ -42,17 +46,40 @@ while len(visited) < len(world.rooms):
     if c_room.id not in graph:
         graph[c_room.id] = {}
 
-        for e in exits:
-            room = c_room.get_room_in_direction(e)
+    for e in exits:
+        room = c_room.get_room_in_direction(e)
+        
+        graph[c_room.id][e] = room.id
+
+        if room not in visited:
+            player.travel(e)
+            traversal_path.append(e)
+            traverse()
+        else:
+            pass
+
+# while len(visited) < len(world.rooms):
+    
+    
+#     c_room = player.current_room
+#     exits = c_room.get_exits()
+#     visited.append(c_room)
+    
+#     if c_room.id not in graph:
+#         graph[c_room.id] = {}
+
+#         for e in exits:
+#             room = c_room.get_room_in_direction(e)
             
-            graph[c_room.id][e] = room.id
+#             graph[c_room.id][e] = room.id
 
-            if room not in visited:
-                player.travel(e)
-                traversal_path.append(e)
-            else:
-                pass
+#             if room not in visited:
+#                 player.travel(e)
+#                 traversal_path.append(e)
+#             else:
+#                 pass
 
+traverse()
 print("graph", graph)
 print("path", traversal_path)
 
