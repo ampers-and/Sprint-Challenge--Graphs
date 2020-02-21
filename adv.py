@@ -17,7 +17,7 @@ map_file = "maps/test_line.txt"
 # map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
-room_graph=literal_eval(open(map_file, "r").read())
+room_graph = literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
@@ -29,61 +29,6 @@ player = Player(world.starting_room)
 # traversal_path = ['n', 'n']
 traversal_path = []
 
-graph = {}
-
-visited = []
-
-def traverse():
-    global player
-    global traversal_path
-    global graph
-    global visited
-
-    c_room = player.current_room
-    exits = c_room.get_exits()
-    visited.append(c_room)
-    
-    if c_room.id not in graph:
-        graph[c_room.id] = {}
-
-    for e in exits:
-        room = c_room.get_room_in_direction(e)
-        
-        graph[c_room.id][e] = room.id
-
-        if room not in visited:
-            player.travel(e)
-            traversal_path.append(e)
-            traverse()
-        else:
-            pass
-
-# while len(visited) < len(world.rooms):
-    
-    
-#     c_room = player.current_room
-#     exits = c_room.get_exits()
-#     visited.append(c_room)
-    
-#     if c_room.id not in graph:
-#         graph[c_room.id] = {}
-
-#         for e in exits:
-#             room = c_room.get_room_in_direction(e)
-            
-#             graph[c_room.id][e] = room.id
-
-#             if room not in visited:
-#                 player.travel(e)
-#                 traversal_path.append(e)
-#             else:
-#                 pass
-
-traverse()
-print("graph", graph)
-print("path", traversal_path)
-
-
 # TRAVERSAL TEST
 visited_rooms = set()
 player.current_room = world.starting_room
@@ -94,11 +39,12 @@ for move in traversal_path:
     visited_rooms.add(player.current_room)
 
 if len(visited_rooms) == len(room_graph):
-    print(f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited")
+    print(
+        f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited"
+    )
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
 
 
 #######
