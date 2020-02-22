@@ -52,7 +52,7 @@ if c_room.id not in graph:
 
 for e in exits:
     room = c_room.get_room_in_direction(e)
-    unexplored.add(room)
+    unexplored.add((c_room, e, room))
 
 
 while len(unexplored) != 0:
@@ -71,7 +71,7 @@ while len(unexplored) != 0:
 
         player.travel(d)
         room = player.current_room
-        unexplored.remove(room)
+        unexplored.remove((c_room, d, room))
         traversal_path.append(d)
 
         if room.id not in graph:
@@ -82,34 +82,65 @@ while len(unexplored) != 0:
 
         for k, v in graph[room.id].items():
             if v == '?':
-                unexplored.add(room.get_room_in_direction(k))
+                unexplored.add((room, k, room.get_room_in_direction(k)))
 
     else:
-        q = Queue()
+
+        exits = c_room.get_exits()
+        d = random.choice(exits)
+
+        player.travel(d)
+        traversal_path.append(d)
+
+        # q = Queue()
+
+        # q.enqueue((c_room, d, c_room.get_room_in_direction(d)))
+
+        # while q.size() > 0:
+        #     vert = q.dequeue()
+        #     if vert in unexplored:
+        #         if player.current_room == vert[0]:
+        #             player.travel(vert[1])
+        #             traversal_path.append(vert[1])
+        #     else:
+        #         player.travel(vert[1])
+        #         traversal_path.append(vert[1])
+
+        #         curr_r = player.current_room
+        #         exits = curr_r.get_exits()
+        #         d = random.choice(exits)
+
+        #         q.enqueue((curr_r, d, curr_r.get_room_in_direction(d)))
+
+
+    print('g: ', graph)
+
+
         # explored = set()
 
         # q.enqueue(c_room)
 
 
+        # q = Queue()
         
-        for e, r in graph[c_room.id].items():
-            q.enqueue([[e,r]])
+        # for e, r in graph[c_room.id].items():
+        #     q.enqueue([[e,r]])
 
-        while q.size() != 0:
-            path = q.dequeue()
-            vert = path[-1]
+        # while q.size() != 0:
+        #     path = q.dequeue()
+        #     vert = path[-1]
 
-            if '?' in graph[vert[1]].values():
-                for e, r in path:
-                    player.travel(e)
-                    traversal_path.append(e)
-                break
+        #     if '?' in graph[vert[1]].values():
+        #         for e, r in path:
+        #             player.travel(e)
+        #             traversal_path.append(e)
+        #         break
 
-            else:
-                for e, r in graph[vert[1]].items():
-                    if r != c_room.id and r not in [room for ex, room in path]:
-                        q.enqueue(list(path) + [[e, r]])
-            print('graph: ', graph, "\n c: ", c_room.id,"\n un: ", unexplored)
+        #     else:
+        #         for e, r in graph[vert[1]].items():
+        #             if r != c_room.id and r not in [room for ex, room in path]:
+        #                 q.enqueue(list(path) + [[e, r]])
+        #     print('graph: ', graph, "\n c: ", c_room.id,"\n un: ", unexplored)
 
 
 
